@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### conf
-./pom.xml
+pom.xml
