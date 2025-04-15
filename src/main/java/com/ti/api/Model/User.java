@@ -1,4 +1,4 @@
-package com.ti.api.Documents;
+package com.ti.api.Model;
 
 import java.util.ArrayList;
 import java.util.List;

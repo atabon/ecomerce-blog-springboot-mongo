@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ti.api.Documents.User;
+import com.ti.api.Mapper.UserMapper;
+import com.ti.api.Model.User;
 import com.ti.api.Services.UserServices;
 
 @RequestMapping("/v1/user")
@@ -30,7 +31,7 @@ public class UserController {
         response.clear();
         try {
             response.put("statut_code", 200);
-            response.put("users", userServices.getAllUsers());
+            response.put("users", UserMapper.toUsersWithoutPosts(userServices.getAllUsers()));
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             response.put("statut_code", 500);
@@ -53,12 +54,27 @@ public class UserController {
         }
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updateUser(@PathVariable String id,
+            @RequestBody User user) {
+        response.clear();
+        try {
+            response.put("statut_code", 201);
+            response.put("user", UserMapper.toUser(userServices.updateUser(id, user)));
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            response.put("statut_code", 404);
+            response.put("message", e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id) {
         response.clear();
         try {
             response.put("statut_code", 200);
-            response.put("user", userServices.getUserById(id));
+            response.put("user", UserMapper.toUser(userServices.getUserById(id)));
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             response.put("statut_code", 404);
